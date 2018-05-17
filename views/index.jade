@@ -1,0 +1,18 @@
+extends layout
+
+block content
+  .wrapper
+    header
+      h1
+      p.desc Operational Transformation(简称 OT)算法实现协同编辑
+    section#page-demo
+      textarea#txt-content(data-autosave='editor-content', autofocus='')= content
+    footer
+
+  script(type='text/javascript', src='/javascripts/jquery.min.js')
+  script(type='text/javascript', src='/javascripts/module.js')
+  script(type='text/javascript', src='/javascripts/hotkeys.js')
+  script(type='text/javascript', src='/javascripts/uploader.js')
+  script(type='text/javascript', src='/javascripts/socket.io.js')
+  script(type='text/javascript', src='/javascripts/app.js')
+  script(type='text/javascript', src='/javascripts/main.js')

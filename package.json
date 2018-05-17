@@ -1,0 +1,35 @@
+{
+  "name": "otEditor",
+  "version": "0.1.0",
+  "description": "otEditor",
+  "main": "index.js",
+  "scripts": {
+    "start": "node ./bin/www"
+  },
+  "dependencies": {
+    "express": "^4.11",
+    "serve-favicon": "*",
+    "morgan": "*",
+    "cookie-parser": "*",
+    "body-parser": "*",
+    "debug": "*",
+    "jade": "*",
+    "socket.io": "^2.1.0",
+    "changesets": "^1.0.2",
+    "diff-match-patch": "1.0.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Fermiz/otEditor.git"
+  },
+  "keywords": [
+    "happy",
+    "docs"
+  ],
+  "author": "Fermiz",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Fermiz/otEditor/issues"
+  },
+  "homepage": "https://github.com/Fermiz/otEditor"
+}
