@@ -197,7 +197,7 @@ table {
 
 /* Literal.String */
 .highlight .na {
-    color: teal;
+    color: #008080;
 }
 
 /* Name.Attribute */
@@ -213,12 +213,12 @@ table {
 
 /* Name.Class */
 .highlight .no {
-    color: teal;
+    color: #008080;
 }
 
 /* Name.Constant */
 .highlight .ni {
-    color: purple;
+    color: #800080;
 }
 
 /* Name.Entity */
@@ -240,12 +240,12 @@ table {
 
 /* Name.Namespace */
 .highlight .nt {
-    color: navy;
+    color: #000080;
 }
 
 /* Name.Tag */
 .highlight .nv {
-    color: teal;
+    color: #008080;
 }
 
 /* Name.Variable */
@@ -320,7 +320,7 @@ table {
 
 /* Literal.String.Other */
 .highlight .sr {
-    color: olive;
+    color: #808000;
 }
 
 /* Literal.String.Regex */
@@ -340,17 +340,17 @@ table {
 
 /* Name.Builtin.Pseudo */
 .highlight .vc {
-    color: teal;
+    color: #008080;
 }
 
 /* Name.Variable.Class */
 .highlight .vg {
-    color: teal;
+    color: #008080;
 }
 
 /* Name.Variable.Global */
 .highlight .vi {
-    color: teal;
+    color: #008080;
 }
 
 /* Name.Variable.Instance */
@@ -478,11 +478,14 @@ a:hover, a:active {
 section#page-demo {
     border-top: none;
 }
-section#page-demo #txt-content {
-    display: none;
-}
 section#page-demo .simditor {
     box-shadow: 0 8px 40px rgba(0, 0, 0, 0.15);
+}
+section#page-demo #preview {
+    min-height: 100px;
+    padding: 15px;
+    margin: 60px 0 0 0;
+    border: 1px solid #dfdfdf;
 }
 
 /* Sidebar Page */
@@ -600,10 +603,10 @@ section.page-doc dt:first-child {
     margin-top: 0;
     padding-top: 0;
 }
-section.page-doc dt > span {
+section.page-doc dt > a, section.page-doc dt > span {
     margin-left: 10px;
 }
-section.page-doc dt > span:first-child {
+section.page-doc dt > a:first-child, section.page-doc dt > span:first-child {
     margin-left: 0;
 }
 section.page-doc dt .name {
@@ -655,10 +658,11 @@ section#page-extension article #btn-submit-extension {
     margin: 20px 0 0 0;
     display: inline-block;
     padding: 6px 12px;
-    color: #ffffff;
-    background: #aaaaaa;
+    color: #333333;
+    border: 1px solid #cccccc;
     border-radius: 4px;
 }
 section#page-extension article #btn-submit-extension:hover {
-    background: #bbbbbb;
+    border-color: #aaaaaa;
+    background: #f3f3f3;
 }

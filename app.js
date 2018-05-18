@@ -29,6 +29,21 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
 
+app.post('/upload', function(req, res) {
+    var tmp_path = req.files.upload_file.path;
+    var target_path = path.resolve('./public/images', req.files.upload_file.name);
+    fs.rename(tmp_path, target_path, function(err) {
+        if (err) throw err;
+        fs.unlink(tmp_path, function() {
+            if (err) throw err;
+            res.send({
+                success: true,
+                file_path: './public/images/' + req.files.upload_file.name
+            });
+        });
+    });
+});
+
 /// catch 404 and forward to error handler
 app.use(function(req, res, next) {
     var err = new Error('Not Found');

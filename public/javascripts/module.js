@@ -1,119 +1,172 @@
-/**
- * simple-module v3.0.3
- * http://mycolorway.github.io/simple-module
- *
- * Copyright Mycolorway Design
- * Released under the MIT license
- * http://mycolorway.github.io/simple-module/license.html
- *
- * Date: 2016-06-20
- */
-;(function(root, factory) {
-  if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('jquery'));
-  } else {
-    root.SimpleModule = factory(root.jQuery);
-  }
+(function (root, factory) {
+    if (typeof define === 'function' && define.amd) {
+        // AMD. Register as an anonymous module unless amdModuleId is set
+        define('simple-module', ["jquery"], function (a0) {
+            return (root['Module'] = factory(a0));
+        });
+    } else if (typeof exports === 'object') {
+        // Node. Does not work with strict CommonJS, but
+        // only CommonJS-like environments that support module.exports,
+        // like Node.
+        module.exports = factory(require("jquery"));
+    } else {
+        root['SimpleModule'] = factory(jQuery);
+    }
 }(this, function ($) {
-var define, module, exports;
-var b = (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-var SimpleModule,
-  slice = [].slice;
 
-SimpleModule = (function() {
-  SimpleModule.extend = function(obj) {
-    var key, ref, val;
-    if (!(obj && typeof obj === 'object')) {
-      throw new Error('SimpleModule.extend: param should be an object');
-    }
-    for (key in obj) {
-      val = obj[key];
-      if (key !== 'included' && key !== 'extended') {
-        this[key] = val;
-      }
-    }
-    if ((ref = obj.extended) != null) {
-      ref.call(this);
-    }
-    return this;
-  };
+    var Module,
+        slice = [].slice;
 
-  SimpleModule.include = function(obj) {
-    var key, ref, val;
-    if (!(obj && typeof obj === 'object')) {
-      throw new Error('SimpleModule.include: param should be an object');
-    }
-    for (key in obj) {
-      val = obj[key];
-      if (key !== 'included' && key !== 'extended') {
-        this.prototype[key] = val;
-      }
-    }
-    if ((ref = obj.included) != null) {
-      ref.call(this);
-    }
-    return this;
-  };
+    Module = (function() {
+        Module.extend = function(obj) {
+            var key, ref, val;
+            if (!((obj != null) && typeof obj === 'object')) {
+                return;
+            }
+            for (key in obj) {
+                val = obj[key];
+                if (key !== 'included' && key !== 'extended') {
+                    this[key] = val;
+                }
+            }
+            return (ref = obj.extended) != null ? ref.call(this) : void 0;
+        };
 
-  SimpleModule.plugins = {};
+        Module.include = function(obj) {
+            var key, ref, val;
+            if (!((obj != null) && typeof obj === 'object')) {
+                return;
+            }
+            for (key in obj) {
+                val = obj[key];
+                if (key !== 'included' && key !== 'extended') {
+                    this.prototype[key] = val;
+                }
+            }
+            return (ref = obj.included) != null ? ref.call(this) : void 0;
+        };
 
-  SimpleModule.plugin = function(name, cls) {
-    if (!(name && typeof name === 'string')) {
-      throw new Error('SimpleModule.plugin: first param should be a string');
-    }
-    if (typeof cls !== 'function') {
-      throw new Error('SimpleModule.plugin: second param should be a class');
-    }
-    this.plugins[name] = cls;
-    return this;
-  };
+        Module.connect = function(cls) {
+            if (typeof cls !== 'function') {
+                return;
+            }
+            if (!cls.pluginName) {
+                throw new Error('Module.connect: cannot connect plugin without pluginName');
+                return;
+            }
+            cls.prototype._connected = true;
+            if (!this._connectedClasses) {
+                this._connectedClasses = [];
+            }
+            this._connectedClasses.push(cls);
+            if (cls.pluginName) {
+                return this[cls.pluginName] = cls;
+            }
+        };
 
-  SimpleModule.opts = {
-    plugins: []
-  };
+        Module.prototype.opts = {};
 
-  SimpleModule.prototype.plugins = {};
+        function Module(opts) {
+            var base, cls, i, instance, instances, len, name;
+            this.opts = $.extend({}, this.opts, opts);
+            (base = this.constructor)._connectedClasses || (base._connectedClasses = []);
+            instances = (function() {
+                var i, len, ref, results;
+                ref = this.constructor._connectedClasses;
+                results = [];
+                for (i = 0, len = ref.length; i < len; i++) {
+                    cls = ref[i];
+                    name = cls.pluginName.charAt(0).toLowerCase() + cls.pluginName.slice(1);
+                    if (cls.prototype._connected) {
+                        cls.prototype._module = this;
+                    }
+                    results.push(this[name] = new cls());
+                }
+                return results;
+            }).call(this);
+            if (this._connected) {
+                this.opts = $.extend({}, this.opts, this._module.opts);
+            } else {
+                this._init();
+                for (i = 0, len = instances.length; i < len; i++) {
+                    instance = instances[i];
+                    if (typeof instance._init === "function") {
+                        instance._init();
+                    }
+                }
+            }
+            this.trigger('initialized');
+        }
 
-  function SimpleModule(opts) {
-    this.opts = $.extend({}, SimpleModule.opts, opts);
-    this.opts.plugins.forEach((function(_this) {
-      return function(name) {
-        return _this.plugins[name] = new SimpleModule.plugins[name](_this);
-      };
-    })(this));
-  }
+        Module.prototype._init = function() {};
 
-  SimpleModule.prototype.on = function() {
-    var args, ref;
-    args = 1 <= arguments.length ? slice.call(arguments, 0) : [];
-    return (ref = $(this)).on.apply(ref, args);
-  };
+        Module.prototype.on = function() {
+            var args, ref;
+            args = 1 <= arguments.length ? slice.call(arguments, 0) : [];
+            (ref = $(this)).on.apply(ref, args);
+            return this;
+        };
 
-  SimpleModule.prototype.off = function() {
-    var args, ref;
-    args = 1 <= arguments.length ? slice.call(arguments, 0) : [];
-    return (ref = $(this)).off.apply(ref, args);
-  };
+        Module.prototype.one = function() {
+            var args, ref;
+            args = 1 <= arguments.length ? slice.call(arguments, 0) : [];
+            (ref = $(this)).one.apply(ref, args);
+            return this;
+        };
 
-  SimpleModule.prototype.trigger = function() {
-    var args, ref;
-    args = 1 <= arguments.length ? slice.call(arguments, 0) : [];
-    return (ref = $(this)).triggerHandler.apply(ref, args);
-  };
+        Module.prototype.off = function() {
+            var args, ref;
+            args = 1 <= arguments.length ? slice.call(arguments, 0) : [];
+            (ref = $(this)).off.apply(ref, args);
+            return this;
+        };
 
-  SimpleModule.prototype.one = function() {
-    var args, ref;
-    args = 1 <= arguments.length ? slice.call(arguments, 0) : [];
-    return (ref = $(this)).one.apply(ref, args);
-  };
+        Module.prototype.trigger = function() {
+            var args, ref;
+            args = 1 <= arguments.length ? slice.call(arguments, 0) : [];
+            (ref = $(this)).trigger.apply(ref, args);
+            return this;
+        };
 
-  return SimpleModule;
+        Module.prototype.triggerHandler = function() {
+            var args, ref;
+            args = 1 <= arguments.length ? slice.call(arguments, 0) : [];
+            return (ref = $(this)).triggerHandler.apply(ref, args);
+        };
 
-})();
+        Module.prototype._t = function() {
+            var args, ref;
+            args = 1 <= arguments.length ? slice.call(arguments, 0) : [];
+            return (ref = this.constructor)._t.apply(ref, args);
+        };
 
-module.exports = SimpleModule;
+        Module._t = function() {
+            var args, key, ref, result;
+            key = arguments[0], args = 2 <= arguments.length ? slice.call(arguments, 1) : [];
+            result = ((ref = this.i18n[this.locale]) != null ? ref[key] : void 0) || '';
+            if (!(args.length > 0)) {
+                return result;
+            }
+            result = result.replace(/([^%]|^)%(?:(\d+)\$)?s/g, function(p0, p, position) {
+                if (position) {
+                    return p + args[parseInt(position) - 1];
+                } else {
+                    return p + args.shift();
+                }
+            });
+            return result.replace(/%%s/g, '%s');
+        };
 
-},{}]},{},[1]);
+        Module.i18n = {
+            'zh-CN': {}
+        };
 
-return b(1);
+        Module.locale = 'zh-CN';
+
+        return Module;
+
+    })();
+
+    return Module;
+
 }));
