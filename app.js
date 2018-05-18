@@ -78,7 +78,7 @@ app.use(function(err, req, res, next) {
 var appServer = http.createServer(app);
 var io = socketIO.listen(appServer);
 
-var content = "This is a content!";
+var content = "";
 
 function computeChanges(revA, revB){
     var diff = dmp.diff_main(revA, revB);

@@ -25,8 +25,11 @@
     socket.on('updateContent', function (data) {
       console.log(data);
       content = data;
-      editor.setValue(data);
-      editor.focus();
+      if(content !== ""){
+          editor.setValue(content);
+          editor.focus();
+      }
+
     });
 
     editor.on('valuechanged',function (){
