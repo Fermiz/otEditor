@@ -393,13 +393,12 @@ a:hover, a:active {
     padding: 50px 0 15px;
 }
 .wrapper header h1 {
-    width: 300px;
+    width: 350px;
     margin: 0 auto;
     padding: 130px 0 0 0;
-    background-position: 4px 0;
-    background-image: url("../images/logo.png");
+    background-position: center;
+    background-image: url(../images/logo.png);
     background-repeat: no-repeat;
-    background-size: 264px 107px;
 }
 @media all and (-webkit-min-device-pixel-ratio: 1.5), all and (-o-min-device-pixel-ratio: 3 / 2), all and (min--moz-device-pixel-ratio: 1.5), all and (min-device-pixel-ratio: 1.5) {
     .wrapper header h1 {
