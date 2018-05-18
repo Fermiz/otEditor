@@ -25,7 +25,7 @@
     socket.on('updateContent', function (data) {
       console.log(data);
       content = data;
-      if(content !== ""){
+      if(content !== "" || timer !== 0){
           editor.setValue(content);
           editor.focus();
       }
